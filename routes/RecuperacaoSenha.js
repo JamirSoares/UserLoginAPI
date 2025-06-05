@@ -40,12 +40,12 @@ router.post('/recovery', async (req, res) => {
   try {
     const {
       cpf,
-      Email
+      email
     } = req.body;
 
-    if (!cpf || !Email) {
+    if (!cpf || !email) {
       return res.status(400).json({
-        error: 'UsuarioId e Email são obrigatórios.'
+        error: 'CPF e Email são obrigatórios.'
       });
     }
 
@@ -53,11 +53,11 @@ router.post('/recovery', async (req, res) => {
     const criado = new Date();
     const expira = new Date(criado.getTime() + 60 * 60 * 1000); // +1 hora
 
-    await enviarCodigoPorEmail(Email, CodigoRecuperacao);
+    await enviarCodigoPorEmail(email, CodigoRecuperacao);
     console.log(expira, criado);
     const novaEntrada = await RecuperacaoSenha.create({
       cpf,
-      Email,
+      Email: email,
       CodigoRecuperacao,
       ExpiraEm: formatarDataSQL(expira),
       CriadoEm: formatarDataSQL(criado),
@@ -129,6 +129,7 @@ router.post('/verify', async (req, res) => {
 
     res.status(200).json({
       message: 'Código de recuperação válido.'
+      
     });
   } catch (error) {
     console.error('Erro ao verificar código de recuperação:', error);

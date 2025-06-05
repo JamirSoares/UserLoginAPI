@@ -59,8 +59,9 @@ router.put('/reset-senha', async (req, res) => {
   const {
     email,
     cpf,
-    novaSenha
-  } = req.body; // 👈 cpf minúsculo
+    senha,
+    confirmarSenha,
+  } = req.body;
 
   try {
     const usuario = await Usuario.findOne({
@@ -76,7 +77,7 @@ router.put('/reset-senha', async (req, res) => {
       });
     }
 
-    const senhaHash = await bcrypt.hash(novaSenha, 10);
+    const senhaHash = await bcrypt.hash(senha, 10);
 
     await Usuario.update({
       senha: senhaHash
